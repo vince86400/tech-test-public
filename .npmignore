@@ -1,0 +1,8 @@
+tsconfig.json
+src
+scripts
+test
+Jenkinsfile
+npm-login.sh
+.prettierrc
+.nvmrc
