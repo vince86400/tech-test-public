@@ -12,3 +12,7 @@ This client is intended to be published as a private npm package that is then in
 
 * Re-run `npm test` - some tests in `http.spec.ts` are now failing - see if you can trouble shoot the root cause and fix the tests!
 * There is one skipped test in `http.spec.ts` - see if you can complete this test case
+
+## Next steps
+
+* Pull changes from branch t2
