@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import * as nock from 'nock'
-import { KeycloakRealmClient, KeycloakRealmConfig } from '../src'
+import { KeycloakRealmClient, KeycloakRealmConfig, KeycloakServiceAccountResponseError } from '../src'
 
 describe('KeycloakRealmClient', () => {
   const config: KeycloakRealmConfig = {
@@ -18,32 +18,62 @@ describe('KeycloakRealmClient', () => {
     'content-type': 'application/json',
   }
 
+  const keycloakValidResponse = {
+    access_token: 'access-token',
+    expires_in: 600,
+    refresh_expires_in: 600,
+    refresh_token: 'refresh-token',
+    token_type: 'bearer',
+    'not-before-policy': 0,
+    session_state: 'uuid-1234',
+    scope: 'profile email',
+  }
+
   beforeEach('Set up', () => {
     nock.disableNetConnect()
   })
 
   afterEach('Clean up', () => {
-    if (!nock.isDone()) {
-      throw new Error('Not all nock interceptors were used!')
-    }
     nock.cleanAll()
   })
 
   it('Should retrieve the access token from keycloak successfully', async () => {
-    const keycloakRes = {
-      access_token: 'access-token',
-      expires_in: 600,
-      refresh_expires_in: 600,
-      refresh_token: 'refresh-token',
-      token_type: 'bearer',
-      'not-before-policy': 0,
-      session_state: 'uuid-1234',
-      scope: 'profile email',
-    }
-
-    nock(`${protocol}//${hostname}`).post(path, reqBody).once().reply(200, keycloakRes, resHeaders)
+    nock(`${protocol}//${hostname}`).post(path, reqBody).once().reply(200, keycloakValidResponse, resHeaders)
 
     const resp = await client.loginAsServiceAccount()
-    expect(resp.getToken()).to.equal(keycloakRes.access_token)
+    expect(resp.getToken()).to.equal(keycloakValidResponse.access_token)
+  })
+
+  it('Should fail if keycloak returns error', async () => {
+    const status = 'error'
+    const response = { status }
+    nock(`${protocol}//${hostname}`).post(path, reqBody).once().reply(500, response, resHeaders)
+
+    await expect(client.loginAsServiceAccount()).to.eventually.be.rejected.and.have.property('status', status)
+  })
+
+  it('Should fail if there is undefined, null or empty config values', async () => {
+    const badConfig = {
+      realmURL: undefined,
+      realmName: null,
+      serviceAccountId: '',
+      serviceAccountSecret: ''
+    }
+    const client: KeycloakRealmClient = new KeycloakRealmClient(badConfig)
+    nock(`${protocol}//localhost`).post(`/auth/realms/${badConfig.realmName}/protocol/openid-connect/token`, reqBody).once().reply(200, keycloakValidResponse, resHeaders)
+    await expect(client.loginAsServiceAccount()).to.eventually
+      .be.rejectedWith('Missing or incorrect config')
+      .and.be.an.instanceof(Error)
+  })
+
+  it('Should fail if keycloak does not return an access_token and a valid expires_in response', async () => {
+    const badKeycloakResponse = {
+      access_token: ''
+    }
+    nock(`${protocol}//${hostname}`).post(path, reqBody).once().reply(200, badKeycloakResponse, resHeaders)
+    await expect(client.loginAsServiceAccount()).to.eventually
+      .be.rejectedWith('Either access token or expiry was invalid in response from keycloak')
+      .and.be.an.instanceof(KeycloakServiceAccountResponseError)
+      .and.have.property('errorCode', 'KEYCLOAK_SERVICE_ACCOUNT_INVALID_CREDENTIALS')
   })
 })

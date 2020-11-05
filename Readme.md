@@ -8,10 +8,9 @@ A simple HTTP client to fetch JWT tokens from an IAM provider (in this case [Key
 
 This client is intended to be published as a private npm package that is then internally used by other services within *86 400* to retrieve service account JWT tokens.
 
-# Branch t1 - Fix some tests
+# Branch t2 - Fix some more tests
 
-* Re-run `npm test` - some tests in `http.spec.ts` are now failing - see if you can trouble shoot the root cause and fix the tests!
-* There is one skipped test in `http.spec.ts` - see if you can complete this test case
+* Re-run `npm test` - some tests in `keycloakRealmClient.spec.ts` are now failing - see if you can trouble shoot the root cause and change the code that will then pass the tests!
 
 ## Next steps
 

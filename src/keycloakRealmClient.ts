@@ -20,6 +20,8 @@ export interface KeycloakServiceAccountLoginResponse {
   scope: string
 }
 
+export class KeycloakServiceAccountResponseError extends Error {}
+
 export class KeycloakServiceAccountCredentials {
   static fromResponse(response: KeycloakServiceAccountLoginResponse): KeycloakServiceAccountCredentials {
     return new KeycloakServiceAccountCredentials(response.access_token)
