@@ -123,7 +123,7 @@ describe('HTTP', () => {
     await expect(req).to.eventually.be.rejectedWith('Request timed out or conn reset')
   })
   
-  xit('should reject on other errors', async() => {
-
+  xit('should reject on all other errors', async() => {
+    nock(`${protocol}//${hostname}`).get(path).once().replyWithError('Unexpected error')
   })
 })

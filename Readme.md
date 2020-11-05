@@ -8,18 +8,7 @@ A simple HTTP client to fetch JWT tokens from an IAM provider (in this case [Key
 
 This client is intended to be published as a private npm package that is then internally used by other services within *86 400* to retrieve service account JWT tokens.
 
+# Branch t1 - Fix some tests
 
-## Getting Started
-
-This code base uses Node v12.13.1
-
-* Clone the repository
-* Get the code onto an IDE of your flavour
-* Run `npm install` 
-* Run `npm run test` - all tests should pass
-
-Take some time to familiarise yourself with the code base - openly discuss and ask any questions.
-
-## Next steps
-
-* Check out the branch `t1`
+* Re-run `npm test` - some tests in `http.spec.ts` are now failing - see if you can trouble shoot the root cause and fix the tests!
+* There is one skipped test in `http.spec.ts` - see if you can complete this test case
