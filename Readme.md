@@ -11,7 +11,3 @@ This client is intended to be published as a private npm package that is then in
 # Branch t2 - Fix some more tests
 
 * Re-run `npm test` - some tests in `keycloakRealmClient.spec.ts` are now failing - see if you can trouble shoot the root cause and change the code that will then pass the tests!
-
-## Next steps
-
-* Pull changes from branch t2
