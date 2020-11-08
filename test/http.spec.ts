@@ -74,38 +74,6 @@ describe('HTTP', () => {
     await expect(req).to.eventually.be.rejectedWith('Unsupported content type')
   })
 
-  it('should reject on SERVER ERROR 5xx', async () => {
-    const status = 'error'
-    const response = { status }
-    nock(`${protocol}//${hostname}`).get(path).once().reply(500, response, resHeaders)
-
-    const req = request({
-      hostname,
-      path,
-      port,
-      protocol,
-      method: 'GET',
-    })
-
-    await expect(req).to.eventually.be.rejected.and.have.property('status', status)
-  })
-
-  it('should reject on BAD REQUEST 4xx', async () => {
-    const status = 'invalid'
-    const response = { status }
-    nock(`${protocol}//${hostname}`).get(path).once().reply(400, response, resHeaders)
-
-    const req = request({
-      hostname,
-      path,
-      port,
-      protocol,
-      method: 'GET',
-    })
-
-    await expect(req).to.eventually.be.rejected.and.have.property('status', status)
-  })
-
   it('should reject on request timeout', async () => {
     const status = 'success'
     const response = { status }
@@ -123,7 +91,4 @@ describe('HTTP', () => {
     await expect(req).to.eventually.be.rejectedWith('Request timed out or conn reset')
   })
   
-  xit('should reject on other errors', async() => {
-
-  })
 })
