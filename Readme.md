@@ -10,7 +10,7 @@ This client is intended to be published as a private npm package that is then in
 
 # Branch t1 - Fix some tests
 
-* Re-run `npm test` - some tests in `http.spec.ts` are now failing - see if you can trouble shoot the root cause and fix the tests!
+* Re-run `npm test` - some tests in `http.spec.ts` are now failing - see if you can trouble shoot the root cause and fix the source code so the tests will pass!
 * There is one skipped test in `http.spec.ts` - see if you can complete this test case
 
 ## Next steps
